@@ -1,14 +1,18 @@
+if ARGV.length != 2
+  warn "Usage: ruby -I . app.rb [rule file] [num. players]"
+  exit 1
+end
+
 require "app/game"
-require "app/player"
+require "app/rules"
+require "app/state"
 
 module CGL
   class App
-    def initialize
-      players = [
-        Player.new("mage"),
-        Player.new("hunter")
-      ]
-      @game = Game.new(players, $stdin, $stdout)
+    def initialize(abs_path, num_players)
+      rules = Rules.new(abs_path)
+      state = State.new(rules, num_players.to_i)
+      @game = Game.new(rules, state, $stdin, $stdout)
     end
 
     def run
@@ -19,4 +23,4 @@ module CGL
   end
 end
 
-CGL::App.new.run
+CGL::App.new(*ARGV).run

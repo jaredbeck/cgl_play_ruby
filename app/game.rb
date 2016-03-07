@@ -3,9 +3,11 @@ require "app/errors"
 module CGL
   class Game
     CMD_MOVE = /\Amove\s+(\S+)\s+(\S+)\Z/
+    PROMPT = "> ".freeze
 
-    def initialize(players, input, output)
-      @players = players
+    def initialize(rules, state, input, output)
+      @rules = rules
+      @state = state
       @input = input
       @output = output
       @done = false
@@ -14,10 +16,11 @@ module CGL
 
     def run
       until @done
-        @players.each do |p|
+        @state.players.each do |p|
           begin
             print(p)
             evaluate(read, p)
+            break if @done
           rescue InvalidCommand
             retry
           end
@@ -55,6 +58,7 @@ module CGL
     end
 
     def read
+      @output.print PROMPT
       @input.readline.strip
     end
   end

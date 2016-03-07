@@ -4,16 +4,9 @@ require "app/pile"
 
 module CGL
   class Player
-    def initialize(name)
+    def initialize(name, piles)
       @name = name
-      deck = [
-        Card.new("Ysera"),
-        Card.new("Annoy-O-Tron")
-      ]
-      @piles = [
-        Pile.new("hand", []),
-        Pile.new("deck", deck)
-      ]
+      @piles = piles
     end
 
     def move(from, to)
@@ -34,6 +27,12 @@ module CGL
       @piles.map { |pile|
         format("%s: %s", pile.name, pile.cards_to_s)
       }
+    end
+
+    # Replace the contents of a pile without registering a movement, or
+    # triggering anything.
+    def set_pile(name, cards)
+      pile(name).cards = cards
     end
   end
 end

@@ -1,11 +1,10 @@
 module CGL
   class Card
-    def initialize(name)
-      @name = name
-    end
+    attr_reader :name, :value
 
-    def name
-      @name
+    def initialize(name, value)
+      @name = name
+      @value = value
     end
   end
 end

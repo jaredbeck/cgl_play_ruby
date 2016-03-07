@@ -1,0 +1,13 @@
+{
+  "cards": [
+    { "name": "2♣︎", "value": 2 },
+    { "name": "A♠︎", "value": 14 },
+    { "name": "Q♥︎", "value": 12 },
+    { "name": "J♦︎", "value": 11 }
+  ],
+  "name": "War",
+  "start_state": {
+    "divide_cards": true,
+    "divide_cards_into_pile": "deck"
+  }
+}

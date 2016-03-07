@@ -2,6 +2,7 @@ require 'forwardable'
 
 module CGL
   class Pile
+    attr_writer :cards
     extend Forwardable
     def_delegators :@cards, :shift, :unshift, :pop, :push
 
