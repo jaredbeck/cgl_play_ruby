@@ -1,4 +1,12 @@
 {
+  "actions": [
+    {
+      "name": "play",
+      "phase": 1,
+      "mandatory": true,
+      "movements": ["draw"]
+    }
+  ],
   "cards": [
     { "name": "Joker︎", "value": 15 },
     { "name": "Joker︎", "value": 15 },
@@ -55,7 +63,20 @@
     { "name": "K♦︎︎", "value": 13 },
     { "name": "A♦︎︎", "value": 14 }
   ],
+  "movements": [
+    { "name": "draw", "number": 1, "from": "deck", "to": "field" },
+    { "name": "clear", "number": "all", "from": "field", "to": "discard" },
+    { "name": "shuffle", "number": "all", "from": "discard", "to": "deck" }
+  ],
   "name": "War",
+  "phases": [
+    { "number": 1, "name": "main" }
+  ],
+  "piles": [
+    { "name": "deck" },
+    { "name": "discard" },
+    { "name": "field" }
+  ],
   "start_state": {
     "divide_cards": true,
     "divide_cards_into_pile": "deck",

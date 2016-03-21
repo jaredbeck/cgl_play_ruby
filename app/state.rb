@@ -37,10 +37,7 @@ module CGL
     def create_players(rules, num_players)
       Array.new(num_players) do |i|
         name = format("Player %d", i)
-        piles = [
-          Pile.new("deck", [])
-        ]
-        Player.new(name, piles)
+        Player.new(name, rules.piles)
       end
     end
 

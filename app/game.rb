@@ -8,6 +8,7 @@ module CGL
     def initialize(rules, state, input, output)
       @rules = rules
       @state = state
+      @action_names = @rules.action_names
       @input = input
       @output = output
       @done = false
@@ -33,15 +34,20 @@ module CGL
 
     private
 
+    def action(command, player)
+      @rules.action(command).movements.each do |move|
+        move.perform_by(player)
+      end
+    end
+
     def evaluate(command, player)
       case command
       when "quit", "exit", "done"
         @done = true
       when "pass", "skip"
         nil
-      when CMD_MOVE
-        from, to = CMD_MOVE.match(command).captures
-        player.move(from, to)
+      when *@action_names
+        action(command, player)
       else
         puts "Invalid command"
         raise InvalidCommand

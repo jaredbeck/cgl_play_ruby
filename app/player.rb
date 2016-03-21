@@ -10,8 +10,8 @@ module CGL
     end
 
     def move(from, to)
-      puts format("Move 1 card from: %s to: %s", from, to)
       card = pile(from).shift
+      puts format("Move 1 card (%s) from: %s to: %s", card.name, from, to)
       pile(to).push(card)
     end
 
@@ -20,7 +20,7 @@ module CGL
     end
 
     def pile(name)
-      @piles.find { |p| p.name == name } || raise(PileNotFound)
+      @piles.find { |p| p.name == name } || raise(PileNotFound, name)
     end
 
     def piles_to_s
