@@ -55,7 +55,7 @@ module CGL
     end
 
     def print(player)
-      puts format("Turn: %d Player: %s", @turn, player.name)
+      @output.puts_bold_green format("Turn: %d Player: %s", @turn, player.name)
       puts player.piles_to_s
     end
 

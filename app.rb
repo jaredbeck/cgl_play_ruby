@@ -6,13 +6,14 @@ end
 require "app/game"
 require "app/rules"
 require "app/state"
+require "app/output"
 
 module CGL
   class App
     def initialize(abs_path, num_players)
       rules = Rules.new(abs_path)
       state = State.new(rules, num_players.to_i)
-      @game = Game.new(rules, state, $stdin, $stdout)
+      @game = Game.new(rules, state, $stdin, Output.new($stdout))
     end
 
     def run
