@@ -8,7 +8,8 @@ module CGL
       @players = create_players(rules, num_players)
       if rules.divide_cards?
         pile_name = rules.divide_cards_into_pile
-        divide_cards_among_players(rules.cards, @players, pile_name)
+        cards = cards_to_be_divided(rules)
+        divide_cards_among_players(cards, @players, pile_name)
       else
         raise "The rules do not describe a start state"
       end
@@ -26,6 +27,11 @@ module CGL
         )
         exit 1
       end
+    end
+
+    def cards_to_be_divided(rules)
+      cards = rules.cards
+      rules.shuffle_before_dividing? ? cards.shuffle : cards
     end
 
     def create_players(rules, num_players)
