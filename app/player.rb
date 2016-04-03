@@ -4,9 +4,21 @@ require "app/pile"
 
 module CGL
   class Player
+    attr_reader :name, :piles, :playing
+
     def initialize(name, piles)
       @name = name
       @piles = piles
+      @playing = true # When false, the player has lost
+    end
+
+    def []=(property, value)
+      case property
+      when "playing"
+        @playing = value
+      else
+        raise "Unexpected property: #{property}"
+      end
     end
 
     def move(from, to)
@@ -15,17 +27,13 @@ module CGL
       pile(to).push(card)
     end
 
-    def name
-      @name
-    end
-
     def pile(name)
       @piles.find { |p| p.name == name } || raise(PileNotFound, name)
     end
 
     def piles_to_s
       @piles.map { |pile|
-        format("%s: %s", pile.name, pile.cards_to_s)
+        format("%10s [%2d]: %s", pile.name, pile.size, pile.cards_to_s)
       }
     end
 

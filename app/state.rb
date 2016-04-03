@@ -2,8 +2,6 @@ require "app/player"
 
 module CGL
   class State
-    attr_reader :players
-
     def initialize(rules, num_players)
       @players = create_players(rules, num_players)
       if rules.divide_cards?
@@ -13,6 +11,11 @@ module CGL
       else
         raise "The rules do not describe a start state"
       end
+    end
+
+    # Return those players who have not lost, i.e. still "playing".
+    def players
+      @players.select(&:playing)
     end
 
     private

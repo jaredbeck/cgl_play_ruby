@@ -1,5 +1,8 @@
 require "app/action"
+require "app/triggers/cause"
+require "app/triggers/effect"
 require "app/movement"
+require "app/trigger"
 require "json"
 
 module CGL
@@ -27,12 +30,31 @@ module CGL
       }
     end
 
+    def cause(raw)
+      object = raw.fetch("object")
+      name = raw.fetch("name")
+      property = raw.fetch("property")
+      operator = raw.fetch("operator")
+      value = raw.fetch("value")
+      Triggers::Cause.new(object, name, property, operator, value)
+    end
+
     def divide_cards?
       !!@raw.dig("start_state", "divide_cards")
     end
 
     def divide_cards_into_pile
       start_state.fetch("divide_cards_into_pile")
+    end
+
+    def effects(raw)
+      raw.map { |raw_effect|
+        object = raw_effect.fetch("object")
+        causal = raw_effect.fetch("causal")
+        property = raw_effect.fetch("property")
+        value = raw_effect.fetch("value")
+        Triggers::Effect.new(object, causal, property, value)
+      }
     end
 
     def movement(name)
@@ -54,6 +76,16 @@ module CGL
 
     def start_state
       @raw.fetch("start_state")
+    end
+
+    def triggers
+      @raw.fetch("triggers").map { |raw|
+        Trigger.new(
+          raw.fetch("name"),
+          cause(raw.fetch("cause")),
+          effects(raw.fetch("effects"))
+        )
+      }
     end
   end
 end

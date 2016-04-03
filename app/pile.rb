@@ -18,5 +18,18 @@ module CGL
     def name
       @name
     end
+
+    def [](property)
+      case property
+      when "count", "size"
+        size
+      else
+        raise "Unexpected pile property: #{property}"
+      end
+    end
+
+    def size
+      @cards.length
+    end
   end
 end

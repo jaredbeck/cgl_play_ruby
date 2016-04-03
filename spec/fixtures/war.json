@@ -81,5 +81,25 @@
     "divide_cards": true,
     "divide_cards_into_pile": "deck",
     "shuffle_before_dividing": true
-  }
+  },
+  "triggers": [
+    {
+      "name": "loss",
+      "cause": {
+        "object": "pile",
+        "name": "deck",
+        "property": "count",
+        "operator": "=",
+        "value": 0
+      },
+      "effects": [
+        {
+          "object": "player",
+          "causal": true,
+          "property": "playing",
+          "value": false
+        }
+      ]
+    }
+  ]
 }
