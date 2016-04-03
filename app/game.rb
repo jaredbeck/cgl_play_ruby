@@ -12,19 +12,18 @@ module CGL
       @triggers = @rules.triggers
       @input = input
       @output = output
-      @done = false
-      @turn = 0
+      @round = 0
       @stack = []
     end
 
     def run
-      until @done
+      catch(:game_over) do
         @state.players.each do |p|
           turn(p)
           after_turn
-          break if @done
         end
-        @turn += 1
+        after_round
+        @round += 1
       end
     rescue EOFError
       nil
@@ -49,12 +48,29 @@ module CGL
       drain_stack(player)
     end
 
+    def after_round
+      @triggers.each do |tgr|
+        @state.players.each do |player|
+          player.piles.each do |pile|
+            if tgr.match?(pile)
+              apply_trigger_effects(tgr, player)
+              there_can_be_only_one
+            end
+          end
+        end
+      end
+    end
+
+    def after_turn
+      there_can_be_only_one
+    end
+
     # If there's only one player left after a turn, they are the winner.
     # TODO: Check more often? Not just after turn?
-    def after_turn
+    def there_can_be_only_one
       if @state.players.count == 1
         announce_winner(@state.players[0])
-        @done = true
+        throw :game_over
       end
     end
 
@@ -91,7 +107,7 @@ module CGL
     def evaluate(command, player)
       case command
       when "quit", "exit", "done"
-        @done = true
+        throw :game_over
       when "pass", "skip"
         nil
       when *@action_names
@@ -103,7 +119,7 @@ module CGL
     end
 
     def print(player)
-      @output.puts_bold_green format("Turn: %d Player: %s", @turn, player.name)
+      @output.puts_bold_green format("Round: %d Player: %s", @round, player.name)
       puts player.piles_to_s
     end
 
@@ -125,14 +141,7 @@ module CGL
         raise "Unexpected event in stack: #{event}"
       end
 
-      # Do any pile triggers match?
-      @triggers.select do |tgr|
-        player.piles.each do |pile|
-          if tgr.match?(pile)
-            apply_trigger_effects(tgr, player)
-          end
-        end
-      end
+      # TODO: Do any pile triggers match?
     end
 
     def turn(player)
